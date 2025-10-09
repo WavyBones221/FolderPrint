@@ -6,7 +6,7 @@ namespace FolderPrint.Object
     public static class Configuration
     {
         private static readonly string ConfigurationFile = "application.properties.json";
-        public static readonly string logPath = Path.Combine(Environment.CurrentDirectory, "FolderPrinterLogFile.txt");
+        public static readonly string logPath = Path.Combine(Environment.CurrentDirectory, "FolderPrinterLogFile");
         public static ICollection<Task>? tasks { get; set; }
         public static string? sumatraPath { get; set; }
         public static bool debugMode { get; set; }

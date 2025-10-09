@@ -13,7 +13,7 @@ foreach (FolderPrint.Object.Task task in Configuration.tasks)
     {
         try
         {
-            File.AppendAllText(Configuration.logPath, $"Folder does not exist: {task.watchFolder}{Environment.NewLine}");
+            File.AppendAllText($"{Configuration.logPath}{Environment.CurrentManagedThreadId}.txt", $"Folder does not exist: {task.watchFolder}{Environment.NewLine}");
             continue;
         }
         catch { continue; }//@TODO add log lock so that threads arent fighting over logfile. or can add log file per thread?? which would be a lazy way of doing it i guess
@@ -52,7 +52,7 @@ static void OnNewPdf(object sender, FileSystemEventArgs e, string? printerName, 
     {
         try
         {
-            File.AppendAllText(Configuration.logPath, $"DEBUGMODE @ [{DateTime.Now:F}] Default Printer Name => \"{defaultPrinter}\"{Environment.NewLine}");
+            File.AppendAllText($"{Configuration.logPath}{Environment.CurrentManagedThreadId}.txt", $"DEBUGMODE @ [{DateTime.Now:F}] Default Printer Name => \"{defaultPrinter}\"{Environment.NewLine}");
         }
         catch { }
 
@@ -60,7 +60,7 @@ static void OnNewPdf(object sender, FileSystemEventArgs e, string? printerName, 
         {
             try
             {
-                File.AppendAllText(Configuration.logPath, $"DEBUGMODE @ [{DateTime.Now:F}] Found Printer Named => \"{printer}\"{Environment.NewLine}");
+                File.AppendAllText($"{Configuration.logPath}{Environment.CurrentManagedThreadId}.txt", $"DEBUGMODE @ [{DateTime.Now:F}] Found Printer Named => \"{printer}\"{Environment.NewLine}");
             }
             catch { }
         }
@@ -90,7 +90,7 @@ static void OnNewPdf(object sender, FileSystemEventArgs e, string? printerName, 
             {
                 try
                 {
-                    File.AppendAllText(Configuration.logPath, $"ERROR @ [{DateTime.Now:F}] Failed to Delete: {e.FullPath}{Environment.NewLine}");
+                    File.AppendAllText($"{Configuration.logPath}{Environment.CurrentManagedThreadId}.txt", $"ERROR @ [{DateTime.Now:F}] Failed to Delete: {e.FullPath}{Environment.NewLine}");
                 }
                 catch { }
             }
@@ -107,7 +107,7 @@ static void OnNewPdf(object sender, FileSystemEventArgs e, string? printerName, 
             {
                 try
                 {
-                    File.AppendAllText(Configuration.logPath, $"ERROR @ [{DateTime.Now:F}] Failed to Move: {e.FullPath}{Environment.NewLine}");
+                    File.AppendAllText($"{Configuration.logPath}{Environment.CurrentManagedThreadId}.txt", $"ERROR @ [{DateTime.Now:F}] Failed to Move: {e.FullPath}{Environment.NewLine}");
                 }
                 catch { }
             }
@@ -117,7 +117,7 @@ static void OnNewPdf(object sender, FileSystemEventArgs e, string? printerName, 
     {
         try
         {
-            File.AppendAllText(Configuration.logPath, $"ERROR @ [{DateTime.Now:F}] Failed to print \"{e.FullPath}\" to \"{printerName ?? defaultPrinter}\": {ex.Message}{Environment.NewLine}");
+            File.AppendAllText($"{Configuration.logPath}{Environment.CurrentManagedThreadId}.txt", $"ERROR @ [{DateTime.Now:F}] Failed to print \"{e.FullPath}\" to \"{printerName ?? defaultPrinter}\": {ex.Message}{Environment.NewLine}");
         }
         catch { }
     }
