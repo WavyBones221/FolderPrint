@@ -1,7 +1,16 @@
 {
-  "watchFolder": "",
-  "printerName": null,
-  "completedFolder": "",
   "sumatraPath": null,
-  "debugMode": false
+  "debugMode": false,
+  "tasks": [
+    {
+      "watchFolder": "",
+      "printerName": null,
+      "completedFolder": ""
+    },
+    {
+      "watchFolder": "",
+      "printerName": null,
+      "completedFolder": ""
+    }
+  ]
 }
