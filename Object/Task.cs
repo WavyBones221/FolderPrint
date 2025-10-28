@@ -11,5 +11,6 @@ namespace FolderPrint.Object
         public string watchFolder { get; set; }
         public string? completedFolder { get; set; }
         public string? printerName { get; set; }
+        public string? orientation { get; set; } = "portrait";
     }
 }

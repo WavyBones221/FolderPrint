@@ -1,16 +1,12 @@
 {
   "sumatraPath": null,
-  "debugMode": false,
+  "debugMode": true,
   "tasks": [
     {
-      "watchFolder": "",
+      "watchFolder": "\\\\DC01\\Company\\Intact iQ\\BehrensFTP\\Returns\\PRINT SFFLenovo-10",
       "printerName": null,
-      "completedFolder": ""
-    },
-    {
-      "watchFolder": "",
-      "printerName": null,
-      "completedFolder": ""
+      "completedFolder": "\\\\DC01\\Company\\Intact iQ\\BehrensFTP\\Returns\\Processed SFFLenovo-10",
+      "orientation": "portrait"
     }
   ]
 }

@@ -10,6 +10,7 @@ namespace FolderPrint.Object
         public static ICollection<Task>? tasks { get; set; }
         public static string? sumatraPath { get; set; }
         public static bool debugMode { get; set; }
+        public static readonly object logLock = new();
 
         public static void SetConfiguration()
         {
