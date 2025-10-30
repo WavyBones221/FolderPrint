@@ -1,4 +1,5 @@
 ﻿using FolderPrint.Object;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Drawing.Printing;
 using System.Runtime.InteropServices;
@@ -6,7 +7,9 @@ using System.Text;
 
 Configuration.SetConfiguration();
 string? defaultPrinter = GetDefaultPrinterName();
-List<FileSystemWatcher> watchers = new();
+List<FileSystemWatcher> watchers = [];
+ConcurrentDictionary<string, DateTime> processedFiles = new();
+
 Log($"Process Start");
 
 foreach (FolderPrint.Object.Task task in Configuration.tasks!)
@@ -36,21 +39,22 @@ foreach (FolderPrint.Object.Task task in Configuration.tasks!)
 
         watcher.Created += (sender, e) =>
         {
-            Log($"File created event triggered for: {e.FullPath}");
-            System.Threading.Tasks.Task.Run(() => OnNewPdf(sender, e, task.printerName, task.completedFolder, task.watchFolder, task.orientation));
+            if (ShouldProcessFile(e.FullPath))
+                System.Threading.Tasks.Task.Run(() => OnNewPdf(sender, e, task.printerName, task.completedFolder, task.watchFolder, task.orientation));
         };
 
         watcher.Changed += (sender, e) =>
         {
-            Log($"File changed event triggered for: {e.FullPath}");
-            System.Threading.Tasks.Task.Run(() => OnNewPdf(sender, e, task.printerName, task.completedFolder, task.watchFolder, task.orientation));
+            if (ShouldProcessFile(e.FullPath))
+                System.Threading.Tasks.Task.Run(() => OnNewPdf(sender, e, task.printerName, task.completedFolder, task.watchFolder, task.orientation));
         };
 
         watcher.Renamed += (sender, e) =>
         {
-            Log($"File renamed event triggered for: {e.FullPath}");
-            System.Threading.Tasks.Task.Run(() => OnNewPdf(sender, e, task.printerName, task.completedFolder, task.watchFolder, task.orientation));
+            if (ShouldProcessFile(e.FullPath))
+                System.Threading.Tasks.Task.Run(() => OnNewPdf(sender, e, task.printerName, task.completedFolder, task.watchFolder, task.orientation));
         };
+
         watchers.Add(watcher);
     }
 }
@@ -60,6 +64,18 @@ while (true)
     Thread.Sleep(1000);
 }
 
+bool ShouldProcessFile(string path)
+{
+    DateTime now = DateTime.Now;
+    if (processedFiles.TryGetValue(path, out DateTime lastProcessed))
+    {
+        if ((now - lastProcessed).TotalSeconds < 10)
+            return false;
+    }
+
+    processedFiles[path] = now;
+    return true;
+}
 
 static void OnNewPdf(object sender, FileSystemEventArgs e, string? printerName, string? completedFolder, string watchFolder, string? orientation = "portrait")
 {
@@ -184,8 +200,6 @@ static bool TryDeleteFile(string path, int maxRetries = 5)
     }
     return false;
 }
-
-
 
 [DllImport("winspool.drv", CharSet = CharSet.Auto, SetLastError = true)]
 static extern bool GetDefaultPrinter(StringBuilder pszBuffer, ref int pcchBuffer);
